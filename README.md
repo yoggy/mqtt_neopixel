@@ -18,6 +18,12 @@ How to connect WioNode and NeoPixel
 
 ![img02.jpg](img02.jpg)
 
+Reference
+----
+- https://github.com/yoggy/arduinoize_wio_node
+- http://akizukidenshi.com/catalog/g/gM-10631/
+- http://akizukidenshi.com/catalog/g/gM-08435/
+
 Copyright and license
 ----
 
