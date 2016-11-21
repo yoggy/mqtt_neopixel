@@ -1,7 +1,7 @@
 mqtt_neopixel.ino
 ====
 
-[img01.jpg](img01.jpg)
+![img01.jpg](img01.jpg)
 
 How to use:
 ----
@@ -16,7 +16,7 @@ How to use:
 How to connect ESP 8266 and NeoPixel
 ----
 
-[img02.jpg](img02.jpg)
+![img02.jpg](img02.jpg)
 
 Copyright and license
 ----
