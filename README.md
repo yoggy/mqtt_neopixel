@@ -13,7 +13,7 @@ How to use:
       - edit wifi_ssid, wifi_password, mqtt_server, mqtt_subscribe_topic, ... etc
     $ open mqtt_neopixel.ino
 
-How to connect ESP 8266 and NeoPixel
+How to connect WioNode and NeoPixel
 ----
 
 ![img02.jpg](img02.jpg)
