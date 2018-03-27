@@ -48,7 +48,7 @@ extern char *wifi_password;
 extern char *mqtt_server;
 extern int  mqtt_port;
 
-extern char *mqtt_client_id; 
+extern char *mqtt_client_id;
 extern bool mqtt_use_auth;
 extern char *mqtt_username;
 extern char *mqtt_password;
@@ -60,6 +60,7 @@ void mqtt_sub_callback(char* topic, byte* payload, unsigned int length);
 PubSubClient mqtt_client(mqtt_server, mqtt_port, mqtt_sub_callback, wifi_client);
 
 void setup_mqtt() {
+  Serial.println("setup_mqtt()");
   WiFi.begin(wifi_ssid, wifi_password);
   WiFi.mode(WIFI_STA);
   int wifi_count = 0;
@@ -87,9 +88,13 @@ void setup_mqtt() {
 
   LED_ON();
   mqtt_client.subscribe(mqtt_subscribe_topic);
+  
+  Serial.println("mqtt_client.connect() success.");
 }
 
 void reboot() {
+  Serial.println("reboot()");
+
   for (int i = 0; i < 10; ++i) {
     LED_ON()
     delay(100);
@@ -113,15 +118,20 @@ void reboot() {
 
 #define LED_NUM 8
 Adafruit_NeoPixel led_strip = Adafruit_NeoPixel(LED_NUM, PORT1_D0, NEO_GRB + NEO_KHZ800); // for WS2812B
-// Adafruit_NeoPixel led_strip = Adafruit_NeoPixel(LED_NUM, PORT1_D0, NEO_RGB + NEO_KHZ400); // ws2811
+//Adafruit_NeoPixel led_strip = Adafruit_NeoPixel(LED_NUM, PORT1_D0, NEO_RGB + NEO_KHZ400); // ws2811
 
 byte *buf = new byte[LED_NUM];
 
 ////////////////////////////////////////////////////////////////////////////////////
 
 void setup() {
+  Serial.begin(115200);
+  Serial.println("setup()");
   INIT_WIO_NODE();
+
+  Serial.println("led_strip.begin()");
   led_strip.begin();
+
   setup_mqtt();
 }
 
@@ -130,14 +140,17 @@ void loop() {
     reboot();
   }
   mqtt_client.loop();
+  
+  delay(1000);
 }
 
 void mqtt_sub_callback(char* topic, byte* payload, unsigned int length) {
   LED_OFF()
   delay(50);
   LED_ON()
-
-  parse_command((char*)payload, length);  
+  Serial.print("payload=");
+  Serial.println((char*)payload);
+  parse_command((char*)payload, length);
 }
 
 //
@@ -164,16 +177,19 @@ void parse_command(char* payload, unsigned int length) {
     // trim space & semicolon
     color_str = String(buf);
     color_str.trim();
-    if (color_str.substring(color_str.length()-1, color_str.length()) == ",") {
-      color_str = color_str.substring(0, color_str.length()-1);
+    if (color_str.substring(color_str.length() - 1, color_str.length()) == ",") {
+      color_str = color_str.substring(0, color_str.length() - 1);
     }
 
+    Serial.print(idx);
+    Serial.print("=");
+    Serial.println(color_str);
     set_led_color(idx, color_str);
 
     idx ++;
     if (LED_NUM <= idx) break;
 
-    tp = strtok(NULL, " ");
+    tp = strtok(NULL, ",");
   }
   led_strip.show();
 }
